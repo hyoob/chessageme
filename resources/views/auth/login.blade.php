@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-
+            <p align="center"><img src="/images/chessageme_logo.png"></p>
 
             <div class="panel panel-default">
 
