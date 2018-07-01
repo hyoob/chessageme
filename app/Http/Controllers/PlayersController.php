@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\Log;
 use App\Player;
 use App\Subscription;
 use DB;
@@ -73,98 +73,98 @@ class PlayersController extends Controller
 
       $player = trim($request->input('player'));
 
-      $count = Player::where('userId', '=' ,$player)->count();
+      $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
+      
+      if ($totalSubscriptions >= 15) {
+        return redirect('/')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
+      } else {
 
-      if($count == 1){
-        $countSubscription = Subscription::where('playerId', '=' ,Player::find($player)->id)->where('userId', '=' ,auth()->user()->id)->count();
+        $count = Player::where('userId', '=' ,$player)->count();
 
-        if ($countSubscription == 1) {
-          return redirect('/')->with('success', 'You are already following player <b>'.$player.'</b>!');
-        } else {
+        if($count == 1){
+          $countSubscription = Subscription::where('playerId', '=' ,Player::find($player)->id)->where('userId', '=' ,auth()->user()->id)->count();
 
-          $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
-          log::info("User id: ".auth()->user()->id.". Total subscriptions:".$totalSubscriptions);
-
-          if ($totalSubscriptions >= 15) {
-            return redirect('/')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
+          if ($countSubscription == 1) {
+            return redirect('/')->with('success', 'You are already following player <b>'.$player.'</b>!');
           } else {
 
-              $subscription = new Subscription;
+                $subscription = new Subscription;
 
-              $subscription->userId = auth()->user()->id;
-              $subscription->playerId = Player::find($player)->id;
-              $subscription->onlineMail = True;
-              $subscription->playingMail = True;
-              $subscription->streamingMail = True;
-              $subscription->onlinePush = True;
-              $subscription->playingPush = True;
-              $subscription->streamingPush = True;
+                $subscription->userId = auth()->user()->id;
+                $subscription->playerId = Player::find($player)->id;
+                $subscription->onlineMail = True;
+                $subscription->playingMail = True;
+                $subscription->streamingMail = True;
+                $subscription->onlinePush = True;
+                $subscription->playingPush = True;
+                $subscription->streamingPush = True;
 
-              $subscription->save();
+                $subscription->save();
 
-              return redirect('/')->with('success', 'You are now following <b>'.$player.'</b>!');
-              }
-            }
-      } else{ 
-        //Set error handling
-        error_reporting('E_All');
-        ini_set('display_errors',1);
-        //Initialize cURL
-        $url = 'https://lichess.org/api/user/'.$player;
-        $ch = curl_init($url);
-        //Set cURL options
-        //Whether to include the header in the output. False here.
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        //Return instead of outputting directly
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-        //Execute the request and fetch the response.
-        $output = curl_exec($ch);
-        //Get the http response status
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        //Close and free up the curl handle
-        curl_close($ch);
-        //Check for errors
-        if($output === FALSE) {
-        echo "cURL Error:" . curl_error($ch);
-        }
-        //Get json from curl output
-        $json = json_decode($output, true);
+                return redirect('/')->with('success', 'You are now following <b>'.$player.'</b>!');
+                }
+              
+        } else{ 
+          //Set error handling
+          error_reporting('E_All');
+          ini_set('display_errors',1);
+          //Initialize cURL
+          $url = 'https://lichess.org/api/user/'.$player;
+          $ch = curl_init($url);
+          //Set cURL options
+          //Whether to include the header in the output. False here.
+          curl_setopt($ch, CURLOPT_HEADER, 0);
+          //Return instead of outputting directly
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+          //Execute the request and fetch the response.
+          $output = curl_exec($ch);
+          //Get the http response status
+          $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          //Close and free up the curl handle
+          curl_close($ch);
+          //Check for errors
+          if($output === FALSE) {
+          echo "cURL Error:" . curl_error($ch);
+          }
+          //Get json from curl output
+          $json = json_decode($output, true);
 
-        if ($httpcode != "200") {
-          return redirect('/')->with('error', "Oops... Lichess returns <b>".$httpcode."</b>. Are you sure player <b>".$player."</b> exists?");
-        } else {
-          $newPlayer = new Player;
+          if ($httpcode != "200") {
+            return redirect('/')->with('error', "Oops... Lichess returns <b>".$httpcode."</b>. Are you sure player <b>".$player."</b> exists?");
+          } else {
+            $newPlayer = new Player;
 
-          $newPlayer->userId = $json ['id'];
-          $newPlayer->username = $json ['username'];
-          $newPlayer->title = $json ['title'];
-          $newPlayer->online = $json ['online'];
-          $newPlayer->playing = $json ['playing'];
-          $newPlayer->streaming = $json ['streaming'];
-          $newPlayer->createdAt = $json ['createdAt'];
-          $newPlayer->seenAt = $json ['seenAt'];
-          $newPlayer->patron = $json ['patron'];
-          $newPlayer->disabled = $json ['disabled'];
-          $newPlayer->engine = $json ['engine'];
-          $newPlayer->playTime = $json ['playTime']['total'];
-          $newPlayer->countAll = $json ['count']['all'];
+            $newPlayer->userId = $json ['id'];
+            $newPlayer->username = $json ['username'];
+            $newPlayer->title = $json ['title'];
+            $newPlayer->online = $json ['online'];
+            $newPlayer->playing = $json ['playing'];
+            $newPlayer->streaming = $json ['streaming'];
+            $newPlayer->createdAt = $json ['createdAt'];
+            $newPlayer->seenAt = $json ['seenAt'];
+            $newPlayer->patron = $json ['patron'];
+            $newPlayer->disabled = $json ['disabled'];
+            $newPlayer->engine = $json ['engine'];
+            $newPlayer->playTime = $json ['playTime']['total'];
+            $newPlayer->countAll = $json ['count']['all'];
 
-          $newPlayer->save();
+            $newPlayer->save();
 
-          $subscription = new Subscription;
+            $subscription = new Subscription;
 
-          $subscription->userId = auth()->user()->id;
-          $subscription->playerId = Player::find($player)->id;
-          $subscription->onlineMail = True;
-          $subscription->playingMail = True;
-          $subscription->streamingMail = True;
-          $subscription->onlinePush = True;
-          $subscription->playingPush = True;
-          $subscription->streamingPush = True;
+            $subscription->userId = auth()->user()->id;
+            $subscription->playerId = Player::find($player)->id;
+            $subscription->onlineMail = True;
+            $subscription->playingMail = True;
+            $subscription->streamingMail = True;
+            $subscription->onlinePush = True;
+            $subscription->playingPush = True;
+            $subscription->streamingPush = True;
 
-          $subscription->save();
+            $subscription->save();
 
-          return redirect('/')->with('success', "You are now following <b>".$newPlayer->username."</b>!");
+            return redirect('/')->with('success', "You are now following <b>".$newPlayer->username."</b>!");
+          }
         }
       }
     }
