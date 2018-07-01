@@ -81,21 +81,28 @@ class PlayersController extends Controller
           return redirect('/')->with('success', 'You are already following player <b>'.$player.'</b>!');
         } else {
 
-          $subscription = new Subscription;
+          $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
 
-          $subscription->userId = auth()->user()->id;
-          $subscription->playerId = Player::find($player)->id;
-          $subscription->onlineMail = True;
-          $subscription->playingMail = True;
-          $subscription->streamingMail = True;
-          $subscription->onlinePush = True;
-          $subscription->playingPush = True;
-          $subscription->streamingPush = True;
+          if ($totalSubscriptions >= 15) {
+            return redirect('/')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
+          } else {
 
-          $subscription->save();
+              $subscription = new Subscription;
 
-          return redirect('/')->with('success', 'You are now following <b>'.$player.'</b>!');
-          }
+              $subscription->userId = auth()->user()->id;
+              $subscription->playerId = Player::find($player)->id;
+              $subscription->onlineMail = True;
+              $subscription->playingMail = True;
+              $subscription->streamingMail = True;
+              $subscription->onlinePush = True;
+              $subscription->playingPush = True;
+              $subscription->streamingPush = True;
+
+              $subscription->save();
+
+              return redirect('/')->with('success', 'You are now following <b>'.$player.'</b>!');
+              }
+            }
       } else{ 
         //Set error handling
         error_reporting('E_All');
@@ -202,9 +209,18 @@ class PlayersController extends Controller
      */
     public function destroy($id)
     {
+        $playerRemoved = DB::table('players')
+        ->select(DB::raw("players.username"))
+        ->join(
+          'subscriptions',
+          'subscriptions.playerId','=','players.id'
+        )
+        ->where('subscriptions.id', '=', $id)
+        ->value("players.username");
+
         $subscription = Subscription::find($id);
         $subscription->delete();
-        return redirect('/')->with('success', "Player removed from your Follow list!");
+        return redirect('/')->with('success', "Player <strong>".$playerRemoved. "</strong> removed!");
 
     }
 }
