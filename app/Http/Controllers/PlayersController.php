@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Player;
 use App\Subscription;
 use DB;
@@ -82,6 +83,7 @@ class PlayersController extends Controller
         } else {
 
           $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
+          log::info("User id: ".auth()->user()->id.". Total subscriptions:".$totalSubscriptions);
 
           if ($totalSubscriptions >= 15) {
             return redirect('/')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
