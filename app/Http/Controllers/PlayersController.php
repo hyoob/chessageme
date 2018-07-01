@@ -35,6 +35,8 @@ class PlayersController extends Controller
           // $subscribed = Player::where('username','hbull')->get();
           // $subscribed = DB::select(SELECT * FROM players);
 
+        $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
+
         $subscribed = DB::table('players')
         ->select(DB::raw("*"))
         ->join(
@@ -46,7 +48,7 @@ class PlayersController extends Controller
         ->paginate(10);
 
         //return $subscribed;
-        return view('pages.home')->with('subscribed',$subscribed);
+        return view('pages.home')->with(['subscribed'=>$subscribed, 'totalSubscriptions'=>$totalSubscriptions]);
     }
 
     /**

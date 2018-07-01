@@ -25,7 +25,7 @@
                 </div>
                 <br>
                 <div>
-                  <h4>You are currently following</h4>
+                  <h4>You are currently following <strong>{!!$totalSubscriptions!!}</strong> players:</h4>
                   @if(count($subscribed) > 0)
                     @foreach($subscribed as $suby)
                       <div class="form-group">
