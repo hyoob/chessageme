@@ -77,8 +77,8 @@ class PlayersController extends Controller
 
       $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
       
-      if ($totalSubscriptions >= 15) {
-        return redirect('/dashboard')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
+      if ($totalSubscriptions >= 10) {
+        return redirect('/dashboard')->with('error', 'You are already following <strong>10 players</strong>. This is the maximum we can allow at the moment.');
       } else {
 
         $count = Player::where('userId', '=' ,$player)->count();
