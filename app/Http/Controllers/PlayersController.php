@@ -48,7 +48,7 @@ class PlayersController extends Controller
         ->paginate(10);
 
         //return $subscribed;
-        return view('pages.home')->with(['subscribed'=>$subscribed, 'totalSubscriptions'=>$totalSubscriptions]);
+        return view('pages.dashboard')->with(['subscribed'=>$subscribed, 'totalSubscriptions'=>$totalSubscriptions]);
     }
 
     /**
@@ -58,7 +58,7 @@ class PlayersController extends Controller
      */
     public function create()
     {
-        return view('pages.home');
+        return view('pages.dashboard');
     }
 
     /**
@@ -78,7 +78,7 @@ class PlayersController extends Controller
       $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
       
       if ($totalSubscriptions >= 15) {
-        return redirect('/')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
+        return redirect('/dashboard')->with('error', 'You are already following <strong>15 players</strong>. This is the maximum we can allow at the moment.');
       } else {
 
         $count = Player::where('userId', '=' ,$player)->count();
@@ -87,7 +87,7 @@ class PlayersController extends Controller
           $countSubscription = Subscription::where('playerId', '=' ,Player::find($player)->id)->where('userId', '=' ,auth()->user()->id)->count();
 
           if ($countSubscription == 1) {
-            return redirect('/')->with('success', 'You are already following player <b>'.$player.'</b>!');
+            return redirect('/dashboard')->with('success', 'You are already following player <b>'.$player.'</b>!');
           } else {
 
                 $subscription = new Subscription;
@@ -103,7 +103,7 @@ class PlayersController extends Controller
 
                 $subscription->save();
 
-                return redirect('/')->with('success', 'You are now following <b>'.$player.'</b>!');
+                return redirect('/dashboard')->with('success', 'You are now following <b>'.$player.'</b>!');
                 }
               
         } else{ 
@@ -132,7 +132,7 @@ class PlayersController extends Controller
           $json = json_decode($output, true);
 
           if ($httpcode != "200") {
-            return redirect('/')->with('error', "Oops... Lichess returns <b>".$httpcode."</b>. Are you sure player <b>".$player."</b> exists?");
+            return redirect('/dashboard')->with('error', "Oops... Lichess returns <b>".$httpcode."</b>. Are you sure player <b>".$player."</b> exists?");
           } else {
             $newPlayer = new Player;
 
@@ -165,7 +165,7 @@ class PlayersController extends Controller
 
             $subscription->save();
 
-            return redirect('/')->with('success', "You are now following <b>".$newPlayer->username."</b>!");
+            return redirect('/dashboard')->with('success', "You are now following <b>".$newPlayer->username."</b>!");
           }
         }
       }
@@ -224,7 +224,7 @@ class PlayersController extends Controller
 
         $subscription = Subscription::find($id);
         $subscription->delete();
-        return redirect('/')->with('success', "Player <strong>".$playerRemoved. "</strong> removed!");
+        return redirect('/dashboard')->with('success', "Player <strong>".$playerRemoved. "</strong> removed!");
 
     }
 }

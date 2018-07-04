@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+           <p align="center"><img src="/images/chessageme_logo.png"></p>
             <div>
               <!--  <div class="panel-heading">Dashboard</div> //-->
 
@@ -14,34 +15,25 @@
                         </div>
                     @endif
 
-                        <h4>Enter a player to follow</h4>
-                    {!! Form::open(['action' => 'PlayersController@store', 'method' => 'POST']) !!}
-                        <div class="form-group">
-                          {{Form::text('player', '', ['class' => 'form-control', 'placeholder' => 'player'])}}
-                        </div>
-                        {{Form::submit('Submit',['class'=>'btn btn-primary'])}}
-                    {!! Form::close() !!}
-
+                        <hr>
+                        <div>
+                    This website emails you when your favorite chess player(s) start(s) playing on <a href="https://lichess.org/" target="_blank">lichess.org</a>.
+                    <br>
+                    <br>
+                    1- <a href="/register">Register</a> or <a href="/login">Log in</a>. 
+                    <br>
+                    2- Go to <a href="https://lichess.org/" target="_blank">lichess.org</a> and grab the username of a player you'd like to follow (e.g <a href="https://lichess.org/@/DrDrunkenstein" target="_blank">DrDrunkenstein</a> for reigning world champion <strong>Magnus Carlsen</strong>).
+                    <br>
+                    3- Enter the lichess username in your <a href="/dashboard" target="_blank">dashboard page</a>  and hit "Submit". Note that you can unfollow players anytime.
+                    <br>
+                    <br>
+                    This service is free and based on the <a href="https://lichess.org/api" target="_blank">lichess API</a>. In order to keep it free and respect Lichess' servers, you can follow a maximum of 10 players.
+                    <br>
+                    <br>
+                    Enjoy!
                 </div>
                 <br>
-                <div>
-                  <h4>You are currently following <strong>{!!$totalSubscriptions!!}</strong> players:</h4>
-                  @if(count($subscribed) > 0)
-                    @foreach($subscribed as $suby)
-                      <div class="form-group">
-                        <div class="list-group-item">
-                        {!!Form::open(['action'=> ['PlayersController@destroy', $suby->id], 'method'=> 'POST', 'class'=> ''])!!}
-                          {{Form::label('title',$suby->username)}}
-                          {{Form::hidden('_method', 'DELETE')}}
-                          {{Form::submit('Unfollow', ['class'=> 'btn btn-danger btn-xs pull-right'])}}
-                        {!!Form::close()!!}
-                        </div>
-                      </div>
-                    @endforeach
-                    {{$subscribed->links()}}
-                  @else
-                    <p>... no one. Go to lichess and find someone interesting to follow!</p>
-                  @endif
+
                 </div>
             </div>
         </div>

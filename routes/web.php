@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'PlayersController@index');
+Route::get('/', 'PagesController@index');
 
 Route::resource('players','PlayersController');
 
@@ -19,7 +19,8 @@ Route::resource('players','PlayersController');
 
 Auth::routes();
 
-Route::get('/dashboard', 'DashboardController@index');
+Route::get('/dashboard', [ 'as' => 'dashboard', 'uses' => 'PlayersController@index']);
+
 
 // Route::get('status', 'PagesController@getStatus');
 
