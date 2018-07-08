@@ -5,7 +5,8 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-            <p align="center"><img src="/images/chessageme_logo.png"></p>
+            <p align="center"><img src="/images/chessageme_logo_full.png" width="376" height="64"></p>
+            <hr>
 
             <div class="panel panel-default">
 
@@ -67,29 +68,6 @@
                     </form>
                 </div>
             </div>
-
-            <div>
-                    Welcome to Chessageme!
-                    <br>
-                    <br>
-                    This site allows you to receive notifications when your favorite chess players start playing on <a href="https://lichess.org/" target="_blank">lichess.org</a>.
-                    <br>
-                    <br>
-                    It is free and simple to use:
-                    <br>
-                    1- <strong>Register/log in</strong>. The adress you use will be the one we send notifications to when the Lichess players you follow start playing on <a href="https://lichess.org/" target="_blank">lichess.org</a>.
-                    <br>
-                    2- Grab the handle of the Lichess player you'd like to follow (e.g <strong>Magnus Carlsen</strong> aka <a href="https://lichess.org/@/DrDrunkenstein" target="_blank">DrDrunkenstein</a>) and hit "follow".
-                    <br>
-                    3- You'll receive an email whenever a player you follow starts playing on Lichess. Note that you can unfollow players anytime.
-                    <br>
-                    <br>
-                    To provide this service our site makes use of the <a href="https://lichess.org/api" target="_blank">lichess API</a>. Please limit the number of players you follow to a maximum of ~10, in order to respect our and Lichess' servers.
-                    <br>
-                    <br>
-                    Enjoy!
-                </div>
-                <br>
 
         </div>
     </div>
