@@ -35,7 +35,6 @@
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li> <a href="/status">Fetch status</a></li>
                             <li>
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
