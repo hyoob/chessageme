@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-           <p align="center"><img src="/images/chessageme_logo.png"></p>
+           <p align="center"><img src="/images/chessageme_logo_full.png" width="376" height="64"></p>
             <div>
               <!--  <div class="panel-heading">Dashboard</div> //-->
 
