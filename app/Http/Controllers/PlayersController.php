@@ -76,9 +76,11 @@ class PlayersController extends Controller
       $player = trim($request->input('player'));
 
       $totalSubscriptions = Subscription::where('userId', '=' ,auth()->user()->id)->count();
+
+      $maxSubscriptions = 10;
       
-      if ($totalSubscriptions >= 10) {
-        return redirect('/dashboard')->with('error', 'You are already following <strong>10 players</strong>. This is the maximum we can allow at the moment.');
+      if ($totalSubscriptions >= $maxSubscriptions) {
+        return redirect('/dashboard')->with('error', 'You are already following <strong>'.$maxSubscriptions.' players</strong>. This is the maximum we can allow at the moment.');
       } else {
 
         $count = Player::where('userId', '=' ,$player)->count();
@@ -87,7 +89,7 @@ class PlayersController extends Controller
           $countSubscription = Subscription::where('playerId', '=' ,Player::find($player)->id)->where('userId', '=' ,auth()->user()->id)->count();
 
           if ($countSubscription == 1) {
-            return redirect('/dashboard')->with('success', 'You are already following player <b>'.$player.'</b>!');
+            return redirect('/dashboard')->with('success', 'You are already following player <strong>'.$player.'</strong>!');
           } else {
 
                 $subscription = new Subscription;
@@ -103,7 +105,7 @@ class PlayersController extends Controller
 
                 $subscription->save();
 
-                return redirect('/dashboard')->with('success', 'You are now following <b>'.$player.'</b>!');
+                return redirect('/dashboard')->with('success', 'You are now following <strong>'.$player.'</strong>!');
                 }
               
         } else{ 
@@ -134,6 +136,15 @@ class PlayersController extends Controller
           if ($httpcode != "200") {
             return redirect('/dashboard')->with('error', "Oops... Lichess returns <b>".$httpcode."</b>. Are you sure player <b>".$player."</b> exists?");
           } else {
+            
+            /* Need logic here to handle deleted lichess users
+              
+              if (is_null($json ['createdAt'])) {
+              return redirect('/dashboard')->with('error', "We did not receive data for the lichess player <b>".$json ['username']."</b> This Lichess account was likely terminated.");
+            } else {}
+
+            */
+
             $newPlayer = new Player;
 
             $newPlayer->userId = $json ['id'];
