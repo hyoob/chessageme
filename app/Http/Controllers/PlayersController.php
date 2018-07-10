@@ -137,46 +137,44 @@ class PlayersController extends Controller
             return redirect('/dashboard')->with('error', "Oops... Lichess returns <b>".$httpcode."</b>. Are you sure player <b>".$player."</b> exists?");
           } else {
             
-            /* Need logic here to handle deleted lichess users
-              
+            //Logic to handle deleted lichess users (e.g Wheeler8)
               if (is_null($json ['createdAt'])) {
-              return redirect('/dashboard')->with('error', "We did not receive data for the lichess player <b>".$json ['username']."</b> This Lichess account was likely terminated.");
-            } else {}
+              return redirect('/dashboard')->with('error', "The Lichess account <strong>".$player."</strong> seems to be closed.");
+                } else {
 
-            */
+                  $newPlayer = new Player;
 
-            $newPlayer = new Player;
+                  $newPlayer->userId = $json ['id'];
+                  $newPlayer->username = $json ['username'];
+                  $newPlayer->title = $json ['title'];
+                  $newPlayer->online = $json ['online'];
+                  $newPlayer->playing = $json ['playing'];
+                  $newPlayer->streaming = $json ['streaming'];
+                  $newPlayer->createdAt = $json ['createdAt'];
+                  $newPlayer->seenAt = $json ['seenAt'];
+                  $newPlayer->patron = $json ['patron'];
+                  $newPlayer->disabled = $json ['disabled'];
+                  $newPlayer->engine = $json ['engine'];
+                  $newPlayer->playTime = $json ['playTime']['total'];
+                  $newPlayer->countAll = $json ['count']['all'];
 
-            $newPlayer->userId = $json ['id'];
-            $newPlayer->username = $json ['username'];
-            $newPlayer->title = $json ['title'];
-            $newPlayer->online = $json ['online'];
-            $newPlayer->playing = $json ['playing'];
-            $newPlayer->streaming = $json ['streaming'];
-            $newPlayer->createdAt = $json ['createdAt'];
-            $newPlayer->seenAt = $json ['seenAt'];
-            $newPlayer->patron = $json ['patron'];
-            $newPlayer->disabled = $json ['disabled'];
-            $newPlayer->engine = $json ['engine'];
-            $newPlayer->playTime = $json ['playTime']['total'];
-            $newPlayer->countAll = $json ['count']['all'];
+                  $newPlayer->save();
 
-            $newPlayer->save();
+                  $subscription = new Subscription;
 
-            $subscription = new Subscription;
+                  $subscription->userId = auth()->user()->id;
+                  $subscription->playerId = Player::find($player)->id;
+                  $subscription->onlineMail = True;
+                  $subscription->playingMail = True;
+                  $subscription->streamingMail = True;
+                  $subscription->onlinePush = True;
+                  $subscription->playingPush = True;
+                  $subscription->streamingPush = True;
 
-            $subscription->userId = auth()->user()->id;
-            $subscription->playerId = Player::find($player)->id;
-            $subscription->onlineMail = True;
-            $subscription->playingMail = True;
-            $subscription->streamingMail = True;
-            $subscription->onlinePush = True;
-            $subscription->playingPush = True;
-            $subscription->streamingPush = True;
+                  $subscription->save();
 
-            $subscription->save();
-
-            return redirect('/dashboard')->with('success', "You are now following <b>".$newPlayer->username."</b>!");
+                  return redirect('/dashboard')->with('success', "You are now following <b>".$newPlayer->username."</b>!");
+                }
           }
         }
       }
