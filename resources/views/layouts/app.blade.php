@@ -12,6 +12,10 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- GA Tracking -->
+    @include('inc.analytics')
+
 </head>
 <body>
     <div id="app">
