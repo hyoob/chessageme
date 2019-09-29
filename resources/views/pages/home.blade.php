@@ -22,7 +22,7 @@
                     <br>
                     1- <a href="/register">Register</a> or <a href="/login">Log in</a>. 
                     <br>
-                    2- Go to <a href="https://lichess.org/" target="_blank">lichess.org</a> and grab the username of a player you'd like to follow (e.g <a href="https://lichess.org/@/DrDrunkenstein" target="_blank">DrDrunkenstein</a> for reigning world champion <strong>Magnus Carlsen</strong>).
+                    2- Go to <a href="https://lichess.org/" target="_blank">lichess.org</a> and grab the username of a player you'd like to follow (e.g <a href="https://lichess.org/@/DrNykterstein" target="_blank">DrNykterstein</a> for reigning world champion <strong>Magnus Carlsen</strong>).
                     <br>
                     3- Enter the lichess username in your <a href="/dashboard" target="_blank">dashboard page</a>  and hit "Submit". Note that you can unfollow players anytime.
                     <br>
